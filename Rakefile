@@ -1,2 +1,10 @@
-#!/usr/bin/env rake
-require "bundler/gem_tasks"
+# -*- coding: utf-8 -*-
+$:.unshift("/Library/RubyMotion/lib")
+require 'motion/project'
+require 'rubygems'
+Bundler.require
+
+Motion::Project::App.setup do |app|
+  # Use `rake config' to see complete project settings.
+  app.name = 'modeltest'
+end
