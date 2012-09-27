@@ -1,4 +1,4 @@
-# Motion::Rails::Model
+# motion-rails-model
 
 TODO: Write a gem description
 
