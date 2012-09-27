@@ -51,7 +51,7 @@ module RM
     end
 
     def fetch(url="#{self.class.to_s.downcase}/#{self.id}", &block)
-      data = {credentials: {username: @@username, password: @@password}}
+      data = { credentials: {username: @@username, password: @@password}}
       connect(url, data, :get) do |result|
         block.call(result)
       end
