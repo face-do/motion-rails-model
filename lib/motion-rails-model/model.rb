@@ -73,7 +73,7 @@ module RM
             block.call(self.class.new(json))
           end
         else
-          raise response.status_code
+          block.call(nil)
         end
       end
     end

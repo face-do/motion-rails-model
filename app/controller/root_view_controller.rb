@@ -2,13 +2,13 @@ class RootViewController < UIViewController
 
   def viewDidLoad
     super
-    begin
       Entries.all do |result|
-        p result
+        if result
+          p result
+        else
+          p "error"
+        end
       end
-    rescue => e
-      Alert(e)
-    end
   end
 
 end
