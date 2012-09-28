@@ -38,6 +38,13 @@ module RM
       end
     end
 
+    def destory(url="#{self.class.to_s.downcase}/#{self.id}", &block)
+      data = { credentials: {username: @@username, password: @@password}}
+      connect(url, data, :delete) do |result|
+        block.call(result)
+      end
+    end
+
     def self.set_url(url)
       @@url = url
     end
@@ -66,11 +73,15 @@ module RM
     def connect(url, data, http_verb, &block)
       BW::HTTP.send(http_verb, "#{@@url}#{url}", data) do |response|
         if response.ok?
-          json = BW::JSON.parse(response.body.to_str)
-          if json.instance_of?(Array)
-            block.call(json.map {|y| self.class.new(y) })
+          if response.body.nil?
+            block.call(response.status_code)
           else
-            block.call(self.class.new(json))
+            json = BW::JSON.parse(response.body.to_str)
+            if json.instance_of?(Array)
+              block.call(json.map {|y| self.class.new(y) })
+            else
+              block.call(self.class.new(json))
+            end
           end
         else
           block.call(nil)
