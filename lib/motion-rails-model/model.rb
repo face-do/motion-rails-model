@@ -73,19 +73,14 @@ module RM
     def connect(url, data, http_verb, &block)
       BW::HTTP.send(http_verb, "#{@@url}#{url}", data) do |response|
         if response.ok?
-          if response.body.nil?
-            block.call(response.status_code)
+          json = BW::JSON.parse(response.body.to_str)
+          if json.instance_of?(Array)
+            response.instance_variable_set(:@body, json.map {|y| self.class.new(y) })
           else
-            json = BW::JSON.parse(response.body.to_str)
-            if json.instance_of?(Array)
-              block.call(json.map {|y| self.class.new(y) })
-            else
-              block.call(self.class.new(json))
-            end
+            response.instance_variable_set(:@body, self.class.new(json))
           end
-        else
-          block.call(nil)
         end
+        block.call(response)
       end
     end
 
